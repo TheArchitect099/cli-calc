@@ -1,0 +1,84 @@
+This workflow runs a CMake build on Linux, Windows, and macOS,
+
+and then runs the compiled application to ensure it works correctly.
+
+name: Multi-Platform CMake Build
+
+on:
+push:
+branches: [ "main" ]
+pull_request:
+branches: [ "main" ]
+
+env:
+
+Customize the CMake build type here
+
+BUILD_TYPE: Release
+
+Set the name of your executable (e.g., 'cli-calc' if your CMake target is cli-calc)
+
+EXECUTABLE_NAME: cli-calc # <-- IMPORTANT: Change this to your executable's name if it's different
+
+jobs:
+build:
+# Use the matrix strategy to run the job on multiple OS platforms
+runs-on: ${{ matrix.os }}
+
+strategy:
+  matrix:
+    os: [ubuntu-latest, windows-latest, macos-latest]
+
+steps:
+- uses: actions/checkout@v4
+
+# 1. CONFIGURATION
+- name: Configure CMake
+  # Note: On Windows, explicit generator specification might be required (e.g., Visual Studio) but is often inferred.
+  run: |
+    if [ "${{ runner.os }}" == "Windows" ]; then
+      cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+    else
+      cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+    fi
+  shell: bash # Use bash for cross-platform command execution
+
+# 2. BUILD
+- name: Build
+  # Build the program with the specified configuration
+  run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+# 3. TESTING/RUN (Added)
+- name: Run Basic Test
+  working-directory: ${{github.workspace}}/build
+  shell: bash
+  run: |
+    # Determine the path to the executable file
+    if [ "${{ runner.os }}" == "Windows" ]; then
+      # For Windows, the executable is in a subdirectory (Release/Debug) and has the .exe extension
+      EXEC_PATH="./${{ env.BUILD_TYPE }}/${{ env.EXECUTABLE_NAME }}.exe"
+    else
+      # For Linux/macOS, it is directly in the build folder
+      EXEC_PATH="./${{ env.EXECUTABLE_NAME }}"
+    fi
+    
+    echo "Running: $EXEC_PATH"
+    
+    # Test the calculator by passing arguments (e.g., 5 + 3)
+    # IMPORTANT: Change this test if your calculator accepts arguments differently!
+    # For example, if your calculator accepts '5 3 +', change the command below.
+    OUTPUT=$($EXEC_PATH 5 + 3)
+    echo "Output: $OUTPUT"
+    
+    # Check that the output contains the expected result "8"
+    if echo "$OUTPUT" | grep -q "8"; then
+      echo "Test passed for ${{ runner.os }}!"
+    else
+      echo "Test failed! Expected result '8' but got '$OUTPUT'."
+      exit 1
+    fi
+    
+# 4. (Optional) Run CTest
+- name: Run CTest
+  working-directory: ${{github.workspace}}/build
+  run: ctest -C ${{env.BUILD_TYPE}}
