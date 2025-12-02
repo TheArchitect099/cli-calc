@@ -16,7 +16,7 @@ This project is designed for educational purposes, helping you practice C progra
 
 ## 🛠️ Technologies
 
-<img src="https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white" alt="C"/>
+<img src="https://img.shields.io/badge/c-%23A8B9CC.svg?style=for-the-badge&logo=c&logoColor=black" alt="C"/>
 
 ## 📁 Project Structure
 ```
