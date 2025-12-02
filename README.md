@@ -6,10 +6,10 @@ This project is designed for educational purposes, helping you practice C progra
 ## 🚀 Features
 
 ###  - Perform basic arithmetic operations:  
-###  ➕ Addition  
-###  ➖ Subtraction  
-###  ✖️ Multiplication  
-###  ➗ Division  
+####  ➕ Addition  
+####  ➖ Subtraction  
+####  ✖️ Multiplication  
+####  ➗ Division  
 ###  - Simple and intuitive command-line interface  
 ###  - Lightweight and fast  
 ###  - Cross-platform: Windows, Linux, macOS  
