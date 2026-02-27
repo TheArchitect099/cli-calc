@@ -61,3 +61,5 @@ Ideal for beginners learning C and GitHub workflow
 
 This is an educational project.
 All code is written by the author. Any resemblance to other calculators is purely coincidental.
+
+Small update
